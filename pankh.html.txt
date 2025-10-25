@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Pankh Restaurant & Cafe - Mansarovar, Jaipur</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- === SUPABASE JS LIBRARY === -->
+    <!-- Added the Supabase client library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- === END SUPABASE === -->
+
+    <style>
+        /* --- CORE DESIGN SYSTEM: Pankh Themes --- */
+        /* 1. Default: Teal & Gold (Feather/Wing) */
+        :root {
+            --bg-color: #F8FAF5; /* Off-White/Creamy Background */
+            --text-color: #1F2937; /* Dark Gray Text */
+            --primary-color: #0F766E; /* Elegant Teal (Emerald 700) */
+            --primary-text-color: #FFFFFF;
+            --secondary-color: #D97706; /* Warm Gold (Amber 600) */
+            --secondary-text-color: #FFFFFF;
+            --accent-color: #c79a3a; /* Muted Gold for accents */
+            --card-bg-color: #FFFFFF;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* 2. Theme: Midnight Rose (Dark Mode) */
+        [data-theme="midnight"] {
+            --bg-color: #111827; /* Dark Gray-Blue */
+            --text-color: #E5E7EB; /* Light Gray */
+            --primary-color: #F472B6; /* Bright Pink (Pink 400) */
+            --primary-text-color: #111827;
+            --secondary-color: #6366F1; /* Indigo (Indigo 500) */
+            --secondary-text-color: #FFFFFF;
+            --accent-color: #a75c80;
+            --card-bg-color: #1F2937; /* Lighter dark */
+        }
+        
+        /* 3. Theme: Royal Velvet (Elegant) */
+        [data-theme="royal"] {
+            --bg-color: #f5f3ff; /* Lavender white */
+            --text-color: #1e1b4b; /* Deep Indigo */
+            --primary-color: #7c3aed; /* Vibrant Violet */
+            --primary-text-color: #FFFFFF;
+            --secondary-color: #d946ef; /* Fuchsia */
+            --secondary-text-color: #FFFFFF;
+            --accent-color: #a855f7; /* Purple */
+            --card-bg-color: #FFFFFF;
+        }
+
+        /* 4. Theme: Forest Trail (Earthy/Green) */
+        [data-theme="forest"] {
+            --bg-color: #f0fdf4; /* Very light green */
+            --text-color: #14532d; /* Dark Green */
+            --primary-color: #16a34a; /* Green 600 */
+            --primary-text-color: #FFFFFF;
+            --secondary-color: #ca8a04; /* Yellow 600 */
+            --secondary-text-color: #FFFFFF;
+            --accent-color: #65a30d; /* Lime 600 */
+            --card-bg-color: #FFFFFF;
+        }
+
+        /* 5. Theme: Sunset Glow (Warm) */
+        [data-theme="sunset"] {
+            --bg-color: #fff7ed; /* Light Orange */
+            --text-color: #431407; /* Dark Brown */
+            --primary-color: #f97316; /* Orange 500 */
+            --primary-text-color: #FFFFFF;
+            --secondary-color: #ef4444; /* Red 500 */
+            --secondary-text-color: #FFFFFF;
+            --accent-color: #eab308; /* Yellow 500 */
+            --card-bg-color: #FFFFFF;
+        }
+        
+        /* 6. Theme: Ocean Breeze (Blue/Cool) */
+        [data-theme="ocean"] {
+            --bg-color: #f0f9ff; /* Light Sky Blue */
+            --text-color: #0c4a6e; /* Dark Blue */
+            --primary-color: #0ea5e9; /* Sky 500 */
+            --primary-text-color: #FFFFFF;
+            --secondary-color: #06b6d4; /* Cyan 500 */
+            --secondary-text-color: #FFFFFF;
+            --accent-color: #3b82f6; /* Blue 500 */
+            --card-bg-color: #FFFFFF;
+        }
+
+
+        /* --- Base Styles --- */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            color: var(--primary-color);
+        }
+        
+        /* --- Utility Classes for Themes --- */
+        .bg-primary { background-color: var(--primary-color); }
+        .text-primary { color: var(--primary-color); }
+        .text-primary-contrast { color: var(--primary-text-color); }
+        
+        .bg-secondary { background-color: var(--secondary-color); }
+        .text-secondary { color: var(--secondary-color); }
+        .text-secondary-contrast { color: var(--secondary-text-color); }
+        
+        .bg-accent { background-color: var(--accent-color); }
+        .text-accent { color: var(--accent-color); }
+
+        .bg-main { background-color: var(--bg-color); }
+        .text-main { color: var(--text-color); }
+        .bg-card { background-color: var(--card-bg-color); }
+        
+        .border-primary { border-color: var(--primary-color); }
+        .border-secondary { border-color: var(--secondary-color); }
+
+        .ring-primary:focus {
+            --tw-ring-color: var(--primary-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--primary-text-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--secondary-text-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-secondary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--primary-text-color);
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--text-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-ghost:hover {
+            background-color: var(--primary-color);
+            color: var(--primary-text-color);
+        }
+        .btn-ghost-secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-ghost-secondary:hover {
+            background-color: var(--secondary-color);
+            color: var(--secondary-text-color);
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+        
+        /* --- Component Styles --- */
+        .category-tab.active {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background-color: var(--card-bg-color);
+        }
+        .category-tab {
+            color: var(--text-color);
+            border-color: transparent;
+        }
+        
+        /* Custom animation for cart icon */
+        @keyframes cart-bump {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .cart-bump {
+            animation: cart-bump 0.3s ease-out;
+        }
+        
+        /* Custom animation for spin wheel result */
+        @keyframes result-pop {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .result-pop {
+            animation: result-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Blur backdrop for modals */
+        .backdrop-blur-sm {
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        
+        /* Intro Video Overlay */
+        #intro-video-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            transition: opacity 0.5s ease-out;
+        }
+        #intro-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+        }
+        #intro-overlay {
+            position: relative;
+            z-index: 1001;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 0.5rem;
+        }
+        #intro-overlay h1 {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        #intro-overlay p {
+            font-size: 1.25rem;
+            color: #eee;
+        }
+
+    </style>
+</head>
+<body class="bg-main text-main transition-colors duration-300">
+
+    <!-- ===== INTRO VIDEO OVERLAY ===== -->
+    <section id="intro-video-section">
+        <!-- Video from Pexels, by Mikhail Nilov -->
+        <video id="intro-video" poster="https://placehold.co/1920x1080/000000/ffffff?text=Loading+Video..." playsinline autoplay muted loop>
+             <source src="https://videos.pexels.com/video-files/7533339/7533339-hd_1920_1080_25fps.mp4" type="video/mp4">
+             Your browser does not support the video tag.
+        </video>
+        <div id="intro-overlay">
+            <h1 class="font-heading text-4xl sm:text-6xl text-white">The Pankh</h1>
+            <p class="font-body text-lg sm:text-2xl text-gray-200">Click anywhere to enter</p>
+        </div>
+    </section>
+
+
+    <!-- ===== HEADER & NAVIGATION ===== -->
+    <header class="bg-card shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <svg class="h-10 w-10 text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17c-1.16-1.16-2.84-2-5-2-2.16 0-3.84.84-5 2-1.16-1.16-2.84-2-5-2-2.16 0-3.84.84-5 2V7c1.16 1.16 2.84 2 5 2 2.16 0 3.84-.84 5-2 1.16 1.16 2.84 2 5 2 2.16 0 3.84-.84 5-2v10z"></path><path d="M22 17v-2"></path><path d="M17 15v-2"></path><path d="M12 17v-2"></path><path d="M7 15v-2"></path><path d="M2 17v-2"></path></svg>
+                    <span class="ml-3 text-2xl font-bold font-heading text-primary">The Pankh</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden sm:flex sm:items-center sm:space-x-6">
+                    <a href="#home" class="text-main hover:text-primary transition-colors duration-200 font-medium">Home</a>
+                    <a href="#menu" class="text-main hover:text-primary transition-colors duration-200 font-medium">Menu</a>
+                    <a href="#about" class="text-main hover:text-primary transition-colors duration-200 font-medium">About</a>
+                    <a href="#contact" class="text-main hover:text-primary transition-colors duration-200 font-medium">Contact</a>
+                    
+                    <!-- Theme Selector -->
+                    <button id="theme-toggle-btn" class="p-2 rounded-full btn-ghost" aria-label="Toggle Theme">
+                        <i data-lucide="sun" id="theme-icon-sun"></i>
+                        <i data-lucide="moon" id="theme-icon-moon" class="hidden"></i>
+                    </button>
+
+                    <!-- Cart Button -->
+                    <button id="cart-button" class="relative p-2 rounded-full btn-ghost" aria-label="Open Cart">
+                        <i data-lucide="shopping-cart"></i>
+                        <span id="cart-count-badge" class="absolute -top-1 -right-1 bg-secondary text-secondary-contrast text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="sm:hidden flex items-center">
+                    <!-- Cart Button -->
+                    <button id="mobile-cart-button" class="relative p-2 rounded-full btn-ghost" aria-label="Open Cart">
+                        <i data-lucide="shopping-cart"></i>
+                        <span id="mobile-cart-count-badge" class="absolute -top-1 -right-1 bg-secondary text-secondary-contrast text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                    <!-- Theme Selector -->
+                    <button id="mobile-theme-toggle-btn" class="p-2 rounded-full btn-ghost" aria-label="Toggle Theme">
+                        <i data-lucide="sun" id="mobile-theme-icon-sun"></i>
+                        <i data-lucide="moon" id="mobile-theme-icon-moon" class="hidden"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="p-2 rounded-md btn-ghost" aria-label="Open Menu">
+                        <i data-lucide="menu" id="mobile-menu-open-icon"></i>
+                        <i data-lucide="x" id="mobile-menu-close-icon" class="hidden"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu Panel -->
+            <div id="mobile-menu" class="sm:hidden hidden pb-3 space-y-1">
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-main hover:bg-primary hover:text-primary-contrast">Home</a>
+                <a href="#menu" class="block px-3 py-2 rounded-md text-base font-medium text-main hover:bg-primary hover:text-primary-contrast">Menu</a>
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-main hover:bg-primary hover:text-primary-contrast">About</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-main hover:bg-primary hover:text-primary-contrast">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ===== HOME / HERO SECTION ===== -->
+        <section id="home" class="pt-8 mb-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- Hero Text -->
+                <div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-heading text-primary mb-6">
+                        Experience Authentic Flavor
+                    </h1>
+                    <p class="text-lg sm:text-xl text-main mb-8">
+                        Welcome to The Pankh, where traditional recipes meet modern ambiance. Discover a culinary journey that delights your senses.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#menu" class="px-8 py-3 rounded-lg btn-primary text-lg font-semibold shadow-lg text-center">Order Now</a>
+                        <a href="#contact" class="px-8 py-3 rounded-lg btn-outline text-lg font-semibold border-2 text-center">Book a Table</a>
+                    </div>
+                </div>
+                
+                <!-- Hero Image -->
+                <div class="rounded-lg overflow-hidden shadow-2xl">
+                    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x400/0F766E/FFFFFF?text=Delicious+Food'"
+                         alt="Delicious salad bowl" 
+                         class="w-full h-full object-cover aspect-video md:aspect-square">
+                </div>
+            </div>
+        </section>
+        
+        <!-- ===== CALL TO ACTION / GAME CENTER ===== -->
+        <section class="bg-card p-6 sm:p-8 rounded-lg shadow-lg mb-16 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary rounded-full opacity-20"></div>
+            <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-primary rounded-full opacity-10"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold font-heading text-primary mb-2">Feeling Lucky?</h2>
+                    <p class="text-base sm:text-lg text-main">Spin the wheel to win an exclusive discount on your order today!</p>
+                </div>
+                <button id="open-game-center-btn" class="px-6 py-3 rounded-lg btn-secondary text-lg font-semibold shadow-lg animate-pulse">
+                    <i data-lucide="gift" class="inline-block mr-2"></i>
+                    Spin to Win!
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== MENU SECTION ===== -->
+        <section id="menu" class="pt-16 mb-16">
+            <h2 class="text-3xl sm:text-4xl font-bold font-heading text-primary text-center mb-12">Our Menu</h2>
+            
+            <!-- Category Tabs -->
+            <div class="flex justify-center mb-8 overflow-x-auto whitespace-nowrap pb-2 -mx-4 px-4">
+                <div id="category-tabs" class="inline-flex space-x-2 sm:space-x-4 border-b-2 border-gray-200">
+                    <!-- Tabs will be injected by JS -->
+                </div>
+            </div>
+            
+            <!-- Menu Items Grid -->
+            <div id="menu-items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Menu items will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- ===== ABOUT SECTION ===== -->
+        <section id="about" class="pt-16 mb-16">
+            <h2 class="text-3xl sm:text-4xl font-bold font-heading text-primary text-center mb-12">Our Story</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center">
+                <div class="rounded-lg overflow-hidden shadow-xl">
+                    <img src="https://images.pexels.com/photos/1307698/pexels-photo-1307698.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x400/7c3aed/FFFFFF?text=Our+Ambiance'"
+                         alt="Restaurant interior" 
+                         class="w-full h-full object-cover aspect-video md:aspect-square">
+                </div>
+                <div class="prose prose-lg text-main max-w-none">
+                    <p>
+                        "Pankh," meaning "feather," symbolizes our mission to provide a light, uplifting, and delightful dining experience. 
+                        Born from a passion for authentic Indian and continental cuisine, The Pankh Restaurant & Cafe was founded in the heart of Mansarovar, Jaipur, to be a sanctuary for food lovers.
+                    </p>
+                    <p>
+                        Our chefs are artisans who meticulously craft each dish using the freshest local ingredients. We believe in food that not only tastes good but also tells a story. From our sizzling tandoori specials to our comforting pasta, every bite is an invitation to explore a world of flavor.
+                    </p>
+                    <p>
+                        We are more than just a restaurant; we are a community hub. A place for first dates, family celebrations, and quiet afternoons with a cup of our signature spiced chai.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT SECTION ===== -->
+        <section id="contact" class="pt-16 mb-8">
+            <h2 class="text-3xl sm:text-4xl font-bold font-heading text-primary text-center mb-12">Get in Touch</h2>
+            <div class="bg-card p-6 sm:p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Contact Info -->
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-2xl font-heading font-semibold text-primary mb-3">Visit Us</h3>
+                            <p class="text-lg text-main flex items-start">
+                                <i data-lucide="map-pin" class="w-5 h-5 mr-3 mt-1 text-secondary flex-shrink-0"></i>
+                                <span>1st Floor, 81/30-31, Madhyam Marg, Mansarovar, Jaipur, Rajasthan 302020</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-heading font-semibold text-primary mb-3">Call Us</h3>
+                            <p class="text-lg text-main flex items-center">
+                                <i data-lucide="phone" class="w-5 h-5 mr-3 text-secondary"></i>
+                                <span>+91 98765 43210</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-heading font-semibold text-primary mb-3">Hours</h3>
+                            <p class="text-lg text-main flex items-start">
+                                <i data-lucide="clock" class="w-5 h-5 mr-3 mt-1 text-secondary"></i>
+                                <span>
+                                    <strong>Every Day</strong><br>
+                                    11:00 AM - 11:00 PM
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Map -->
+                    <div>
+                        <iframe 
+                            class="w-full h-80 rounded-lg shadow-md border-2 border-gray-200"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.509890470501!2d75.76813181504368!3d26.85539508315181!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396c4af5f5a2e8c9%3A0x8a7e58595c276f7!2sThe%20Pankh%20Restaurant%20%26%20Cafe!5e0!3m2!1sen!2sin!4v1678888888888!5m2!1sen!2sin" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-card shadow-inner mt-16 border-t border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p class="text-main">&copy; <span id="footer-year">2024</span> The Pankh Restaurant & Cafe. All Rights Reserved.</p>
+            <p class="text-sm text-gray-500 mt-2">Designed with <i data-lucide="heart" class="inline-block w-4 h-4 text-red-500"></i> in Jaipur</p>
+            
+            <!-- Social Media Icons -->
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="Facebook">
+                    <i data-lucide="facebook" class="w-6 h-6"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="Instagram">
+                    <i data-lucide="instagram" class="w-6 h-6"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200" aria-label="Twitter">
+                    <i data-lucide="twitter" class="w-6 h-6"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== CART MODAL ===== -->
+    <div id="cart-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden" aria-labelledby="cart-title" role="dialog" aria-modal="true">
+        <div class="bg-card rounded-lg shadow-2xl w-full max-w-lg m-4 max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-5 border-b border-gray-200">
+                <h2 id="cart-title" class="text-2xl font-heading font-bold text-primary">Your Order</h2>
+                <button id="close-cart-btn" class="p-2 rounded-full btn-ghost" aria-label="Close Cart">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <!-- Order Type Toggle -->
+            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <div class="flex max-w-xs mx-auto rounded-lg p-1 bg-gray-200">
+                    <button id="order-type-dine-in" class="order-type-btn flex-1 py-2 px-4 rounded-md text-sm font-semibold text-gray-700">
+                        <i data-lucide="utensils" class="inline-block w-4 h-4 mr-1"></i> Dine-In
+                    </button>
+                    <button id="order-type-takeaway" class="order-type-btn flex-1 py-2 px-4 rounded-md text-sm font-semibold text-gray-700">
+                        <i data-lucide="shopping-bag" class="inline-block w-4 h-4 mr-1"></i> Takeaway
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cart Body -->
+            <div id="cart-body" class="p-5 overflow-y-auto">
+                <!-- Cart items will be injected here -->
+                <div id="empty-cart-message" class="text-center text-gray-500 py-8">
+                    <i data-lucide="shopping-cart" class="w-16 h-16 mx-auto mb-4 text-gray-300"></i>
+                    <p class="text-lg">Your cart is empty.</p>
+                    <p class="text-sm">Add items from the menu to get started.</p>
+                </div>
+                <div id="cart-items-container"></div>
+            </div>
+            
+            <!-- Cart Footer -->
+            <div id="cart-footer" class="p-5 border-t border-gray-200 mt-auto space-y-4">
+                <!-- Discount Section -->
+                <div id="discount-applied-section" class="hidden">
+                    <div class="flex justify-between items-center text-green-600 font-semibold bg-green-50 p-3 rounded-lg">
+                        <span class="flex items-center">
+                            <i data-lucide="party-popper" class="w-5 h-5 mr-2"></i>
+                            <span id="discount-text">Discount Applied!</span>
+                        </span>
+                        <span id="discount-amount-display">- ₹0.00</span>
+                    </div>
+                </div>
+                
+                <!-- Totals -->
+                <div class="space-y-2 text-lg">
+                    <div class="flex justify-between">
+                        <span class="text-main font-medium">Subtotal</span>
+                        <span id="cart-subtotal" class="font-semibold text-main">₹0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-main font-medium">Taxes (5%)</span>
+                        <span id="cart-taxes" class="font-semibold text-main">₹0.00</span>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold text-primary">
+                        <span>Total</span>
+                        <span id="cart-total">₹0.00</span>
+                    </div>
+                </div>
+                
+                <!-- Action Button -->
+                <button id="checkout-btn" class="w-full px-6 py-4 rounded-lg btn-primary text-lg font-semibold shadow-lg">
+                    Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== GAME CENTER MODAL ===== -->
+    <div id="game-center-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
+        <div class="bg-card rounded-lg shadow-2xl w-full max-w-md m-4 p-6 relative">
+            <button id="close-game-center-btn" class="absolute top-3 right-3 p-2 rounded-full btn-ghost" aria-label="Close Game Center">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <h2 class="text-3xl font-heading font-bold text-primary text-center mb-6">Spin the Wheel!</h2>
+            
+            <!-- Wheel Container -->
+            <div id="wheel-container" class="relative flex justify-center items-center mb-6">
+                <!-- Wheel -->
+                <div id="spin-wheel" class="relative w-72 h-72 sm:w-80 sm:h-80 rounded-full border-8 border-secondary shadow-xl overflow-hidden transition-transform duration-[5000ms] ease-out">
+                    <!-- Segments will be added by JS -->
+                </div>
+                <!-- Pointer -->
+                <div class="absolute -top-2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-[20px] border-t-red-600 z-10" style="left: calc(50% - 8px);"></div>
+                <div class="absolute w-12 h-12 bg-card rounded-full flex items-center justify-center border-4 border-secondary shadow-inner" style="top: calc(50% - 24px); left: calc(50% - 24px);">
+                    <i data-lucide="gift" class="w-6 h-6 text-secondary"></i>
+                </div>
+            </div>
+            
+            <!-- Spin Button -->
+            <button id="spin-btn" class="w-full px-6 py-4 rounded-lg btn-secondary text-lg font-semibold shadow-lg transition-all">
+                Spin Now!
+            </button>
+            
+            <!-- Result Display -->
+            <div id="spin-result" class="hidden text-center mt-6 p-4 rounded-lg bg-green-50 border border-green-200">
+                <h3 class="text-2xl font-heading font-bold text-green-700">Congratulations!</h3>
+                <p class="text-lg text-green-600">You won a <strong id="result-text">10% discount</strong>!</p>
+            </div>
+
+            <!-- Already Spun Display -->
+            <div id="already-spun" class="hidden text-center mt-6 p-4 rounded-lg bg-blue-50 border border-blue-200">
+                <h3 class="text-2xl font-heading font-bold text-blue-700">Already Redeemed!</h3>
+                <p class="text-lg text-blue-600">You've already used your spin for today. Your <strong id="existing-discount-text">10% discount</strong> is active.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== CUSTOM TOAST/MESSAGE MODAL ===== -->
+    <div id="message-modal" class="fixed top-5 right-5 z-[1001] bg-card shadow-2xl rounded-lg p-5 w-full max-w-sm border-l-4 transition-transform translate-x-[150%] duration-300 ease-out" role="alert">
+        <div class="flex items-center">
+            <div id="message-icon-container" class="mr-3">
+                <!-- Icon will be injected here -->
+            </div>
+            <div class="flex-1">
+                <h3 id="message-title" class="text-lg font-semibold font-heading">Success!</h3>
+                <p id="message-body" class="text-main">Item added to cart.</p>
+            </div>
+            <button id="close-message-btn" class="ml-3 p-1 rounded-full text-gray-400 hover:bg-gray-100" aria-label="Close message">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ===== MAIN APPLICATION SCRIPT ===== -->
+    <script type="module">
+        // === SUPABASE CLIENT INITIALIZATION ===
+        // Your new Supabase project details
+        const SUPABASE_URL = 'https://seygsmqucuvnialnuqdv.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNleWdzbXF1Y3V2bmlhbG51cWR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzODY1ODMsImV4cCI6MjA3Njk2MjU4M30.5iXFdlkDHVKRjHBTqUiI1SrRpItoLbrTsZVe-9ETiII';
+        
+        // IMPORTANT: The Service Role Key should NEVER be used in a browser.
+        // We only use the Anon Key here.
+        
+        let supabase = null;
+        try {
+            // 'window.supabase.createClient' is available from the script tag in <head>
+            const { createClient } = window.supabase;
+            supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("Supabase client initialized successfully.");
+        } catch (e) {
+            console.error("Error initializing Supabase:", e);
+        }
+        // === END SUPABASE INITIALIZATION ===
+        
+
+        // === EXISTING APPLICATION LOGIC ===
+        document.addEventListener('DOMContentLoaded', () => {
+    
+            // --- Database ---
+            const menuData = [
+                { id: 1, name: "Pankh Special Paneer Tikka", category: "Appetizers", price: 280, veg: true, description: "Creamy paneer cubes marinated in a special spice blend, grilled to perfection." },
+                { id: 2, name: "Murgh Malai Kebab", category: "Appetizers", price: 350, veg: false, description: "Tender chicken kebabs in a creamy cashew and cheese marinade." },
+                { id: 3, name: "Dahi Ke Kebab", category: "Appetizers", price: 250, veg: true, description: "Soft, melt-in-your-mouth kebabs made from hung curd and spices." },
+                { id: 4, name: "Chilli Paneer Dry", category: "Appetizers", price: 270, veg: true, description: "Classic Indo-Chinese starter with crispy paneer tossed in a spicy sauce." },
+                { id: 5, name: "Crispy Corn", category: "Appetizers", price: 220, veg: true, description: "Sweet corn kernels, fried crispy and tossed with onions, peppers, and spices." },
+                
+                { id: 6, name: "Dal Makhani", category: "Main Course", price: 320, veg: true, description: "Creamy and rich black lentils slow-cooked overnight with butter and cream." },
+                { id: 7, name: "Paneer Butter Masala", category: "Main Course", price: 350, veg: true, description: "Soft paneer in a luscious tomato, butter, and cashew gravy." },
+                { id: 8, name: "Kadhai Paneer", category: "Main Course", price: 340, veg: true, description: "Paneer and bell peppers cooked in a spicy, freshly ground masala." },
+                { id: 9, name: "Butter Chicken", category: "Main Course", price: 450, veg: false, description: "The timeless classic. Grilled chicken in a smooth buttery and creamy tomato gravy." },
+                { id: 10, name: "Laal Maas", category: "Main Course", price: 550, veg: false, description: "A fiery Rajasthani mutton curry with a rich, red gravy." },
+                { id: 11, name: "Malai Kofta", category: "Main Course", price: 360, veg: true, description: "Deep-fried paneer and potato balls in a rich, creamy, and mildly sweet gravy." },
+                
+                { id: 12, name: "Pankh Special Thali", category: "Thali", price: 400, veg: true, description: "A grand platter with Dal Makhani, Shahi Paneer, Mix Veg, Raita, Rice, 2 Roti, Salad, and Gulab Jamun." },
+                { id: 13, name: "Rajasthani Thali", category: "Thali", price: 420, veg: true, description: "Dal Baati Churma, Gatte ki Sabzi, Ker Sangri, Raita, Rice, 2 Baati, Salad, and a sweet." },
+
+                { id: 14, name: "Garlic Naan", category: "Breads", price: 70, veg: true, description: "Soft Indian bread topped with chopped garlic and butter." },
+                { id: 15, name: "Butter Roti", category: "Breads", price: 40, veg: true, description: "Whole wheat bread cooked in a tandoor and brushed with butter." },
+                { id: 16, name: "Lachha Paratha", category: "Breads", price: 60, veg: true, description: "Crispy, multi-layered whole wheat bread." },
+
+                { id: 17, name: "Veg Biryani", category: "Rice", price: 280, veg: true, description: "Aromatic basmati rice cooked with mixed vegetables and fragrant spices, served with raita." },
+                { id: 18, name: "Chicken Biryani", category: "Rice", price: 380, veg: false, description: "Flavorful biryani with tender chicken pieces, cooked dum-style, served with raita." },
+                { id: 19, name: "Jeera Rice", category: "Rice", price: 180, veg: true, description: "Basmati rice tempered with cumin seeds and ghee." },
+
+                { id: 20, name: "Arrabbiata Pasta", category: "Continental", price: 300, veg: true, description: "Penne pasta in a spicy tomato and basil sauce, with exotic vegetables." },
+                { id: 21, name: "Alfredo Pasta", category: "Continental", price: 320, veg: true, description: "Creamy white sauce pasta with mushrooms and herbs. (Add Chicken optional)" },
+                { id: 22, name: "Pankh Club Sandwich", category: "Continental", price: 250, veg: true, description: "A triple-layered sandwich with fresh veggies, cheese, and a special sauce." },
+                { id: 23, name: "Margherita Pizza", category: "Continental", price: 350, veg: true, description: "Classic 10-inch pizza with tomato, basil, and mozzarella." },
+                
+                { id: 24, name: "Virgin Mojito", category: "Drinks", price: 180, veg: true, description: "A refreshing muddle of mint, lemon, and sparkling water." },
+                { id: 25, name: "KitKat Shake", category: "Drinks", price: 220, veg: true, description: "A thick, creamy shake blended with real KitKat bars." },
+                { id: 26, name: "Masala Chai", category: "Drinks", price: 80, veg: true, description: "Traditional Indian spiced tea, a perfect companion." },
+                
+                { id: 27, name: "Gulab Jamun", category: "Desserts", price: 120, veg: true, description: "Two pieces of soft, warm gulab jamun in sweet syrup." },
+                { id: 28, name: "Sizzling Brownie", category: "Desserts", price: 250, veg: true, description: "A sizzling hot brownie topped with vanilla ice cream and chocolate sauce." },
+            ];
+
+            const categories = [...new Set(menuData.map(item => item.category))];
+            
+            // --- Game Wheel Data ---
+            const spinWheelSegments = [
+                { label: "10% OFF", value: 10 },
+                { label: "Try Again", value: 0 },
+                { label: "15% OFF", value: 15 },
+                { label: "5% OFF", value: 5 },
+                { label: "Try Again", value: 0 },
+                { label: "20% OFF", value: 20 },
+                { label: "Try Again", value: 0 },
+                { label: "10% OFF", value: 10 }
+            ];
+            const segmentColors = [
+                "var(--primary-color)", 
+                "var(--secondary-color)", 
+                "var(--accent-color)",
+                "#34d399" /* Emerald 400 */,
+                "var(--primary-color)", 
+                "var(--secondary-color)", 
+                "var(--accent-color)",
+                "#34d399" /* Emerald 400 */
+            ];
+
+            // --- State Variables ---
+            let cart = []; // { id, name, price, quantity, veg }
+            let currentTheme = 'teal'; // Default theme
+            let orderType = 'Dine-In'; // 'Dine-In' or 'Takeaway'
+            let spinDiscount = null; // { value: 10, text: "10% OFF" }
+            let isSpinning = false;
+            
+            // --- Element Selectors ---
+            const categoryTabsContainer = document.getElementById('category-tabs');
+            const menuItemsGrid = document.getElementById('menu-items-grid');
+            
+            const cartButton = document.getElementById('cart-button');
+            const mobileCartButton = document.getElementById('mobile-cart-button');
+            const cartModal = document.getElementById('cart-modal');
+            const closeCartBtn = document.getElementById('close-cart-btn');
+            const cartBody = document.getElementById('cart-body');
+            const cartItemsContainer = document.getElementById('cart-items-container');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const cartFooter = document.getElementById('cart-footer');
+            const cartSubtotalEl = document.getElementById('cart-subtotal');
+            const cartTaxesEl = document.getElementById('cart-taxes');
+            const cartTotalEl = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const cartCountBadges = document.querySelectorAll('#cart-count-badge, #mobile-cart-count-badge');
+            
+            const orderTypeDineInBtn = document.getElementById('order-type-dine-in');
+            const orderTypeTakeawayBtn = document.getElementById('order-type-takeaway');
+            
+            const discountAppliedSection = document.getElementById('discount-applied-section');
+            const discountTextEl = document.getElementById('discount-text');
+            const discountAmountDisplayEl = document.getElementById('discount-amount-display');
+
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle-btn');
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOpenIcon = document.getElementById('mobile-menu-open-icon');
+            const mobileMenuCloseIcon = document.getElementById('mobile-menu-close-icon');
+            
+            const introVideoSection = document.getElementById('intro-video-section');
+            const introVideo = document.getElementById('intro-video');
+
+            const gameCenterBtn = document.getElementById('open-game-center-btn');
+            const gameCenterModal = document.getElementById('game-center-modal');
+            const closeGameCenterBtn = document.getElementById('close-game-center-btn');
+            const spinWheel = document.getElementById('spin-wheel');
+            const spinBtn = document.getElementById('spin-btn');
+            const spinResult = document.getElementById('spin-result');
+            const resultText = document.getElementById('result-text');
+            const alreadySpun = document.getElementById('already-spun');
+            const existingDiscountText = document.getElementById('existing-discount-text');
+            
+            const messageModal = document.getElementById('message-modal');
+            const messageIconContainer = document.getElementById('message-icon-container');
+            const messageTitle = document.getElementById('message-title');
+            const messageBody = document.getElementById('message-body');
+            const closeMessageBtn = document.getElementById('close-message-btn');
+            let messageTimer;
+
+            // --- Theme Management ---
+            function applyTheme(theme) {
+                const html = document.documentElement;
+                const sunIcons = document.querySelectorAll('#theme-icon-sun, #mobile-theme-icon-sun');
+                const moonIcons = document.querySelectorAll('#theme-icon-moon, #mobile-theme-icon-moon');
+                
+                // Clear all themes
+                html.removeAttribute('data-theme');
+                
+                // Set new theme
+                if (theme === 'dark') {
+                    html.setAttribute('data-theme', 'midnight');
+                    sunIcons.forEach(icon => icon.classList.add('hidden'));
+                    moonIcons.forEach(icon => icon.classList.remove('hidden'));
+                } else {
+                    // Default to 'teal' if local storage is something else
+                    if (theme !== 'teal') {
+                        html.setAttribute('data-theme', theme);
+                    }
+                    sunIcons.forEach(icon => icon.classList.remove('hidden'));
+                    moonIcons.forEach(icon => icon.classList.add('hidden'));
+                }
+                currentTheme = theme;
+                localStorage.setItem('pankhTheme', theme);
+                
+                // Re-render wheel for new theme colors
+                renderSpinWheel();
+            }
+
+            function toggleTheme() {
+                // Simple light/dark toggle for now
+                if (currentTheme === 'dark') {
+                    applyTheme('teal'); // Switch to default light
+                } else {
+                    applyTheme('dark'); // Switch to dark
+                }
+            }
+
+            // --- Intro Video ---
+            function playIntro() {
+                introVideo.play().catch(error => {
+                    console.warn("Video autoplay was prevented. User interaction is needed.", error);
+                    // Video will still play on loop, but might start muted without sound.
+                });
+                // Fade out and hide overlay
+                introVideoSection.style.opacity = '0';
+                setTimeout(() => {
+                    introVideoSection.style.display = 'none';
+                }, 500); // Match transition duration
+            }
+
+            // --- Render Functions ---
+            function renderMenu() {
+                // 1. Render Category Tabs
+                categoryTabsContainer.innerHTML = '';
+                categories.forEach((category, index) => {
+                    const tab = document.createElement('button');
+                    tab.className = `category-tab px-4 py-2 font-semibold text-lg border-b-2 transition-all duration-200 ${index === 0 ? 'active' : ''}`;
+                    tab.textContent = category;
+                    tab.dataset.category = category;
+                    tab.addEventListener('click', () => filterMenu(category));
+                    categoryTabsContainer.appendChild(tab);
+                });
+                
+                // 2. Render Menu Items (start with first category)
+                filterMenu(categories[0]);
+            }
+            
+            function filterMenu(category) {
+                // 1. Update Tab Active State
+                document.querySelectorAll('.category-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.category === category);
+                });
+                
+                // 2. Filter and Render Items
+                menuItemsGrid.innerHTML = '';
+                const itemsToRender = menuData.filter(item => item.category === category);
+                
+                itemsToRender.forEach(item => {
+                    const itemCard = document.createElement('div');
+                    itemCard.className = 'bg-card rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform duration-200 hover:scale-[1.02]';
+                    itemCard.innerHTML = `
+                        <div class="p-5 flex-grow">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold font-heading text-primary">${item.name}</h3>
+                                <span class="ml-2 mt-1">
+                                    <img src="${item.veg ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Veg_symbol.svg/1200px-Veg_symbol.svg.png' : 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_Veg_symbol.svg/1200px-Non_Veg_symbol.svg.png'}" alt="${item.veg ? 'Veg' : 'Non-Veg'}" class="w-5 h-5">
+                                </span>
+                            </div>
+                            <p class="text-main mb-4 text-sm">${item.description}</p>
+                        </div>
+                        <div class="p-5 bg-gray-50 bg-opacity-50 flex justify-between items-center">
+                            <span class="text-xl font-bold text-primary">₹${item.price.toFixed(2)}</span>
+                            <button class="add-to-cart-btn px-4 py-2 rounded-lg btn-secondary font-semibold text-sm" data-id="${item.id}">
+                                Add
+                            </button>
+                        </div>
+                    `;
+                    menuItemsGrid.appendChild(itemCard);
+                });
+                
+                // 3. Add Event Listeners
+                menuItemsGrid.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                    button.addEventListener('click', () => addToCart(parseInt(button.dataset.id)));
+                });
+            }
+
+            // --- Cart Functions ---
+            function addToCart(itemId) {
+                const item = menuData.find(i => i.id === itemId);
+                if (!item) return;
+
+                const existingItem = cart.find(i => i.id === itemId);
+                
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ id: item.id, name: item.name, price: item.price, quantity: 1, veg: item.veg });
+                }
+                
+                updateCart();
+                animateCartIcon();
+                showMessage('Added to Cart', `${item.name} was added to your order.`, 'success');
+            }
+
+            function updateCart(fromStorage = false) {
+                // 1. Update UI (Modal)
+                if (cart.length === 0) {
+                    emptyCartMessage.classList.remove('hidden');
+                    cartItemsContainer.innerHTML = '';
+                    cartFooter.classList.add('hidden');
+                } else {
+                    emptyCartMessage.classList.add('hidden');
+                    cartFooter.classList.remove('hidden');
+                    cartItemsContainer.innerHTML = '';
+                    
+                    cart.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'flex items-center justify-between py-4 border-b border-gray-200';
+                        itemEl.innerHTML = `
+                            <div class="flex-grow pr-4">
+                                <div class="flex items-center mb-1">
+                                    <img src="${item.veg ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Veg_symbol.svg/1200px-Veg_symbol.svg.png' : 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Non_Veg_symbol.svg/1200px-Non_Veg_symbol.svg.png'}" alt="${item.veg ? 'Veg' : 'Non-Veg'}" class="w-4 h-4 mr-2">
+                                    <h4 class="font-semibold text-main">${item.name}</h4>
+                                </div>
+                                <p class="text-sm text-gray-500">₹${item.price.toFixed(2)}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="quantity-change-btn p-1 rounded-full btn-ghost-secondary" data-id="${item.id}" data-change="-1">
+                                    <i data-lucide="minus" class="w-4 h-4"></i>
+                                </button>
+                                <span class="font-bold w-6 text-center">${item.quantity}</span>
+                                <button class="quantity-change-btn p-1 rounded-full btn-ghost-secondary" data-id="${item.id}" data-change="1">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        `;
+                        cartItemsContainer.appendChild(itemEl);
+                    });
+                }
+                
+                // 2. Update Totals
+                const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+                
+                let discountAmount = 0;
+                if (spinDiscount) {
+                    discountAmount = (subtotal * spinDiscount.value) / 100;
+                    discountAppliedSection.classList.remove('hidden');
+                    discountTextEl.textContent = `${spinDiscount.text} Discount!`;
+                    discountAmountDisplayEl.textContent = `- ₹${discountAmount.toFixed(2)}`;
+                } else {
+                    discountAppliedSection.classList.add('hidden');
+                }
+
+                const taxes = (subtotal - discountAmount) * 0.05; // 5% GST
+                const total = subtotal - discountAmount + taxes;
+                
+                cartSubtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+                cartTaxesEl.textContent = `₹${taxes.toFixed(2)}`;
+                cartTotalEl.textContent = `₹${total.toFixed(2)}`;
+                
+                // 3. Update Badges
+                const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+                cartCountBadges.forEach(badge => {
+                    badge.textContent = totalItems;
+                    badge.classList.toggle('hidden', totalItems === 0);
+                });
+                
+                // 4. Update Local Storage (unless we just loaded from it)
+                if (!fromStorage) {
+                    saveState();
+                }
+
+                // 5. Re-add lucide icons
+                lucide.createIcons();
+            }
+
+            function changeQuantity(itemId, change) {
+                const item = cart.find(i => i.id === itemId);
+                if (!item) return;
+                
+                item.quantity += change;
+                
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== itemId);
+                }
+                
+                updateCart();
+            }
+
+            function animateCartIcon() {
+                const icons = [cartButton, mobileCartButton];
+                icons.forEach(icon => {
+                    icon.classList.add('cart-bump');
+                    icon.addEventListener('animationend', () => {
+                        icon.classList.remove('cart-bump');
+                    }, { once: true });
+                });
+            }
+
+            function toggleCartModal() {
+                cartModal.classList.toggle('hidden');
+                // Re-calculate totals every time it's opened
+                if (!cartModal.classList.contains('hidden')) {
+                    updateCart();
+                }
+            }
+
+            function updateOrderType(type) {
+                orderType = type;
+                updateOrderTypeUI();
+                saveState();
+            }
+
+            function updateOrderTypeUI() {
+                if (orderType === 'Dine-In') {
+                    orderTypeDineInBtn.classList.add('bg-primary', 'text-primary-contrast', 'shadow');
+                    orderTypeDineInBtn.classList.remove('text-gray-700');
+                    orderTypeTakeawayBtn.classList.remove('bg-primary', 'text-primary-contrast', 'shadow');
+                    orderTypeTakeawayBtn.classList.add('text-gray-700');
+                } else {
+                    orderTypeTakeawayBtn.classList.add('bg-primary', 'text-primary-contrast', 'shadow');
+                    orderTypeTakeawayBtn.classList.remove('text-gray-700');
+                    orderTypeDineInBtn.classList.remove('bg-primary', 'text-primary-contrast', 'shadow');
+                    orderTypeDineInBtn.classList.add('text-gray-700');
+                }
+            }
+
+            // --- Game Center Functions ---
+            function renderSpinWheel() {
+                spinWheel.innerHTML = '';
+                const sliceAngle = 360 / spinWheelSegments.length;
+                
+                spinWheelSegments.forEach((segment, i) => {
+                    const slice = document.createElement('div');
+                    slice.className = 'absolute w-full h-full';
+                    slice.style.transform = `rotate(${sliceAngle * i}deg)`;
+                    slice.style.clipPath = `polygon(50% 50%, 50% 0%, 100% 0%, 50% 50%)`;
+                    if (spinWheelSegments.length > 4) {
+                         // More precise clip-path for many segments
+                         const angleRad = (sliceAngle * Math.PI) / 180;
+                         const x = Math.tan(angleRad / 2) * 50 + 50;
+                         slice.style.clipPath = `polygon(50% 50%, 50% 0, ${x}% 0, 50% 50%)`;
+                    }
+
+                    const sliceContent = document.createElement('div');
+                    sliceContent.className = 'absolute w-full h-full flex items-start justify-center';
+                    sliceContent.style.backgroundColor = segmentColors[i % segmentColors.length];
+                    
+                    const label = document.createElement('span');
+                    label.className = 'font-bold text-white text-sm sm:text-base mt-4';
+                    label.textContent = segment.label;
+                    label.style.transform = `rotate(${sliceAngle / 2}deg) translate(0, -5px)`;
+                    label.style.color = 'var(--primary-text-color)'; // Use theme-aware text
+                    
+                    sliceContent.appendChild(label);
+                    slice.appendChild(sliceContent);
+                    spinWheel.appendChild(slice);
+                });
+            }
+            
+            function openGameCenter() {
+                // Check if discount already exists
+                if (spinDiscount) {
+                    alreadySpun.classList.remove('hidden');
+                    existingDiscountText.textContent = spinDiscount.text;
+                    spinBtn.classList.add('hidden');
+                    spinResult.classList.add('hidden');
+                } else {
+                    alreadySpun.classList.add('hidden');
+                    spinBtn.classList.remove('hidden');
+                    spinResult.classList.add('hidden');
+                    spinBtn.disabled = false;
+                    spinBtn.textContent = 'Spin Now!';
+                }
+                gameCenterModal.classList.remove('hidden');
+            }
+            
+            function closeGameCenter() {
+                gameCenterModal.classList.add('hidden');
+            }
+            
+            function startSpin() {
+                if (isSpinning || spinDiscount) return;
+                
+                isSpinning = true;
+                spinBtn.disabled = true;
+                spinBtn.textContent = 'Spinning...';
+                spinResult.classList.add('hidden');
+                
+                // Calculate winning segment
+                const winningIndex = Math.floor(Math.random() * spinWheelSegments.length);
+                const winningSegment = spinWheelSegments[winningIndex];
+                
+                // Calculate rotation
+                const sliceAngle = 360 / spinWheelSegments.length;
+                const randomOffset = (Math.random() - 0.5) * sliceAngle * 0.8; // Add slight variation
+                const targetAngle = (360 - (winningIndex * sliceAngle) - (sliceAngle / 2)) + randomOffset;
+                const totalRotation = 360 * 5 + targetAngle; // 5 full spins
+                
+                spinWheel.style.transform = `rotate(${totalRotation}deg)`;
+                
+                setTimeout(() => {
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                    
+                    if (winningSegment.value > 0) {
+                        spinDiscount = { value: winningSegment.value, text: winningSegment.label };
+                        resultText.textContent = winningSegment.label;
+                        spinResult.classList.remove('hidden', 'result-pop');
+                        void spinResult.offsetWidth; // Trigger reflow
+                        spinResult.classList.add('result-pop');
+                        
+                        spinBtn.classList.add('hidden');
+                        
+                        // Show a success message
+                        showMessage('You Won!', `A ${spinDiscount.text} discount has been applied to your order.`, 'success');
+                        
+                        // Update cart totals with new discount
+                        updateCart();
+                    } else {
+                        resultText.textContent = "Try Again!";
+                        spinResult.classList.remove('hidden', 'result-pop');
+                        void spinResult.offsetWidth; // Trigger reflow
+                        spinResult.classList.add('result-pop');
+                        spinBtn.textContent = 'Spin Again!';
+                        spinBtn.disabled = false;
+                        
+                        // Show a try again message
+                        showMessage('Better luck next time!', 'You can spin the wheel again.', 'info');
+                    }
+                    
+                    // Save the discount state (even if it's "Try Again", we save "null")
+                    saveState();
+                    
+                }, 5100); // 100ms after wheel stops
+            }
+            
+            // --- Message/Toast Function ---
+            function showMessage(title, body, type = 'success') {
+                // Clear any existing timer
+                if (messageTimer) clearTimeout(messageTimer);
+
+                messageTitle.textContent = title;
+                messageBody.textContent = body;
+                
+                // Reset styles
+                messageModal.classList.remove('border-green-500', 'border-red-500', 'border-blue-500');
+                messageIconContainer.innerHTML = '';
+                
+                let iconHtml = '';
+                let borderColor = '';
+
+                switch (type) {
+                    case 'error':
+                        iconHtml = `<i data-lucide="alert-circle" class="w-6 h-6 text-red-500"></i>`;
+                        borderColor = 'border-red-500';
+                        messageTitle.classList.add('text-red-700');
+                        break;
+                    case 'info':
+                        iconHtml = `<i data-lucide="info" class="w-6 h-6 text-blue-500"></i>`;
+                        borderColor = 'border-blue-500';
+                        messageTitle.classList.add('text-blue-700');
+                        break;
+                    case 'success':
+                    default:
+                        iconHtml = `<i data-lucide="check-circle" class="w-6 h-6 text-green-500"></i>`;
+                        borderColor = 'border-green-500';
+                        messageTitle.classList.add('text-green-700');
+                        break;
+                }
+                
+                messageIconContainer.innerHTML = iconHtml;
+                messageModal.classList.add(borderColor);
+                lucide.createIcons();
+                
+                // Animate in
+                messageModal.classList.remove('translate-x-[150%]');
+                
+                // Set timer to animate out
+                messageTimer = setTimeout(() => {
+                    hideMessage();
+                }, 4000);
+            }
+            
+            function hideMessage() {
+                if (messageTimer) clearTimeout(messageTimer);
+                messageModal.classList.add('translate-x-[150%]');
+                // Reset text colors
+                messageTitle.classList.remove('text-red-700', 'text-blue-700', 'text-green-700');
+            }
+
+            // --- Local Storage ---
+            function saveState() {
+                // This is where you would save to Supabase
+                // For now, we use localStorage
+                try {
+                    localStorage.setItem('pankhCart', JSON.stringify(cart));
+                    localStorage.setItem('pankhOrderType', orderType);
+                    if (spinDiscount) {
+                        localStorage.setItem('pankhDiscount', JSON.stringify(spinDiscount));
+                    } else {
+                        localStorage.removeItem('pankhDiscount');
+                    }
+                } catch (e) {
+                    console.error("Error saving state to local storage:", e);
+                    showMessage('Save Error', 'Could not save your cart. Please try again.', 'error');
+                }
+            }
+            
+            function loadState() {
+                // This is where you would load from Supabase
+                // For now, we use localStorage
+                
+                // Apply theme from local storage
+                applyTheme(localStorage.getItem('pankhTheme') || 'teal');
+                
+                // Load state from local storage
+                try {
+                    const storedCart = JSON.parse(localStorage.getItem('pankhCart') || '[]');
+                    cart = storedCart;
+                    const storedDiscount = localStorage.getItem('pankhDiscount');
+                    if (storedDiscount) spinDiscount = JSON.parse(storedDiscount);
+                    
+                    // Load order type and update UI
+                    orderType = localStorage.getItem('pankhOrderType') || 'Dine-In';
+                    updateOrderTypeUI();
+
+                } catch (e) {
+                    console.error("Error loading state from local storage:", e);
+                    localStorage.removeItem('pankhCart');
+                    localStorage.removeItem('pankhDiscount');
+                }
+
+                // Play intro video if not played before
+                if (localStorage.getItem('pankhIntroPlayed') !== 'true') {
+                    // Do nothing on DOM load, the video/overlay is already visible in HTML
+                    // Play will be triggered on overlay click
+                    localStorage.setItem('pankhIntroPlayed', 'true');
+                } else {
+                     // If already played, hide immediately
+                    introVideoSection.style.display = 'none';
+                }
+
+
+                renderMenu();
+                updateCart(true); // Pass true to prevent re-saving
+            }
+
+            // --- Event Listeners ---
+            function setupEventListeners() {
+                // Intro Video
+                introVideoSection.addEventListener('click', playIntro);
+                
+                // Nav
+                [cartButton, mobileCartButton, closeCartBtn].forEach(btn => {
+                    btn.addEventListener('click', toggleCartModal);
+                });
+                
+                // Theme
+                [themeToggleBtn, mobileThemeToggleBtn].forEach(btn => {
+                    btn.addEventListener('click', toggleTheme);
+                });
+                
+                // Mobile Menu
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuOpenIcon.classList.toggle('hidden');
+                    mobileMenuCloseIcon.classList.toggle('hidden');
+                });
+                
+                // Close mobile menu when a link is clicked
+                document.querySelectorAll('#mobile-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuOpenIcon.classList.remove('hidden');
+                        mobileMenuCloseIcon.classList.add('hidden');
+                    });
+                });
+                
+                // Cart
+                cartItemsContainer.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.quantity-change-btn');
+                    if (btn) {
+                        changeQuantity(parseInt(btn.dataset.id), parseInt(btn.dataset.change));
+                    }
+                });
+
+                // Order Type
+                orderTypeDineInBtn.addEventListener('click', () => updateOrderType('Dine-In'));
+                orderTypeTakeawayBtn.addEventListener('click', () => updateOrderType('Takeaway'));
+                
+                // Game Center
+                gameCenterBtn.addEventListener('click', openGameCenter);
+                closeGameCenterBtn.addEventListener('click', closeGameCenter);
+                spinBtn.addEventListener('click', startSpin);
+
+                // Message Modal
+                closeMessageBtn.addEventListener('click', hideMessage);
+                
+                // Checkout (Example)
+                checkoutBtn.addEventListener('click', () => {
+                    if (cart.length > 0) {
+                        // In a real app, this would send data to a server or Supabase
+                        console.log("Placing order:", {
+                            cart,
+                            orderType,
+                            total: cartTotalEl.textContent,
+                            discount: spinDiscount
+                        });
+                        
+                        // Show success message
+                        showMessage('Order Placed!', 'Your order has been sent to the kitchen.', 'success');
+                        
+                        // Clear cart
+                        cart = [];
+                        spinDiscount = null; // Clear discount after order
+                        updateCart();
+                        saveState(); // Save empty state
+                        
+                        // Close cart
+                        setTimeout(toggleCartModal, 1000);
+                        
+                    } else {
+                        showMessage('Empty Cart', 'Please add items to your cart before placing an order.', 'error');
+                    }
+                });
+            }
+
+            // --- Initialization ---
+            function initApp() {
+                // Initialize Lucide icons
+                lucide.createIcons();
+                
+                // Set footer year
+                document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+                // Load data from "backend" (localStorage for now)
+                loadState();
+                
+                // Render UI components
+                // renderMenu() is called inside loadState
+                renderSpinWheel();
+                
+                // Attach all event listeners
+                setupEventListeners();
+            }
+            
+            initApp();
+            
+            // Expose openGameCenter to global scope for use in the Spin Wheel button
+            // This is needed if the button is outside the module script scope (it's not, but good practice)
+            window.openGameCenter = openGameCenter;
+        });
+    </script>
+</body>
+</html>
